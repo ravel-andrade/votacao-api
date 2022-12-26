@@ -1,7 +1,3 @@
-FROM gradle:jdk17-alpine AS BUILD_STAGE
-COPY --chown=gradle:gradle . /home/gradle
-RUN ./gradlew build || true
-
 FROM openjdk:17
 
 ARG PROFILE
