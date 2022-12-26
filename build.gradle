@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.ravel'
-version = '0.0.1-SNAPSHO T'
+version = '0.0.1-SNAPSHOT'
 sourceCompatibility = 11
 targetCompatibility = 11
 
@@ -25,6 +25,7 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
+	implementation 'mysql:mysql-connector-java:8.0.15'
 	implementation 'com.oracle.database.jdbc:ojdbc8:21.4.0.0'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
