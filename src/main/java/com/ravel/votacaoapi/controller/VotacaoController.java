@@ -2,13 +2,10 @@ package com.ravel.votacaoapi.controller;
 
 import com.ravel.votacaoapi.dto.PautaDto;
 import com.ravel.votacaoapi.dto.SessaoDto;
-import com.ravel.votacaoapi.dto.VotoDto;
 import com.ravel.votacaoapi.model.Pauta;
-import com.ravel.votacaoapi.model.Voto;
 import com.ravel.votacaoapi.service.VotacaoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,12 +28,12 @@ public class VotacaoController {
     }
 
     @PostMapping(value = "/votar", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public void votar(@RequestBody VotoDto votoDto) {
-        service.cadastrarVoto(votoDto);
+    public void votar(@RequestBody SessaoDto sessaoDto) {
+        service.cadastrarVoto(sessaoDto);
     }
 
     @GetMapping(value = "/contabilizar")
-    public Voto contabilizarVotos(@RequestParam String pautaId) {
+    public SessaoDto contabilizarVotos(@RequestParam String pautaId) {
         return service.contabilizarVotos(pautaId);
     }
 
