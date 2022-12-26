@@ -6,7 +6,7 @@ ARG ADITIONAL_OPTS
 ENV PROFILE=${PROFILE}
 ENV ADITIONAL_OPTS=${ADDITIONAL_OPTS}
 
-COPY build/libs/votacao-api-0.0.1-SNAPSHOT.jar /app/app.jar
+COPY ./build/libs/votacao-api-0.0.1-SNAPSHOT.jar /app/app.jar
 
 WORKDIR opt/votacao
 
