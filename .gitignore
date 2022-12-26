@@ -23,7 +23,13 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 
 # Gradle
-build/
+build/classes
+build/generated
+build/reports
+build/resources
+build/test-results
+build/temp
+build/bootJarMainClassName
 .gradle/
 
 # Visual Studio
@@ -49,4 +55,5 @@ build/
 *.7z
 *.rar
 !/gradle/wrapper/gradle-wrapper.jar
+!libs/**/*.jar
 /bin/*
