@@ -3,17 +3,24 @@ package com.ravel.votacaoapi.service;
 import com.ravel.votacaoapi.dto.SessaoDto;
 import com.ravel.votacaoapi.model.Pauta;
 import com.ravel.votacaoapi.repository.PautaRepository;
+import com.ravel.votacaoapi.repository.SessaoRepository;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class VotacaoService {
-    PautaRepository repository;
+    PautaRepository pautaRepository;
+    SessaoRepository sessaoRepository;
 
 
     public Pauta cadastrarPauta(Pauta pauta) {
-        return repository.save(pauta);
+        return pautaRepository.save(pauta);
     }
 
     public SessaoDto abrirSessao(SessaoDto sessao) {
@@ -29,6 +36,6 @@ public class VotacaoService {
     }
 
     public List<Pauta> listarPautas() {
-        return repository.findAll();
+        return pautaRepository.findAll();
     }
 }

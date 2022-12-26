@@ -5,7 +5,6 @@ import com.ravel.votacaoapi.dto.SessaoDto;
 import com.ravel.votacaoapi.model.Pauta;
 import com.ravel.votacaoapi.service.VotacaoService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,10 +40,5 @@ public class VotacaoController {
     @GetMapping(value = "/pautas")
     public List<Pauta> listarPautas() {
         return service.listarPautas();
-    }
-
-    @GetMapping(value = "/teste-heroku")
-    public HttpStatus teste() {
-        return HttpStatus.ACCEPTED;
     }
 }
