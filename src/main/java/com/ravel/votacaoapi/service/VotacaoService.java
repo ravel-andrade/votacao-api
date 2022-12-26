@@ -1,9 +1,7 @@
 package com.ravel.votacaoapi.service;
 
 import com.ravel.votacaoapi.dto.SessaoDto;
-import com.ravel.votacaoapi.dto.VotoDto;
 import com.ravel.votacaoapi.model.Pauta;
-import com.ravel.votacaoapi.model.Voto;
 import com.ravel.votacaoapi.repository.PautaRepository;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +20,11 @@ public class VotacaoService {
         return sessao;
     }
 
-    public Voto contabilizarVotos(String titulo) {
-        return new Voto();
+    public SessaoDto contabilizarVotos(String titulo) {
+        return new SessaoDto();
     }
 
-    public void cadastrarVoto(VotoDto votoDto) {
+    public void cadastrarVoto(SessaoDto sessaoDto) {
 
     }
 
