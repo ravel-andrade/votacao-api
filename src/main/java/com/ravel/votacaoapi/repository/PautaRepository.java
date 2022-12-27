@@ -16,6 +16,6 @@ import java.util.List;
 @Repository
 public interface PautaRepository extends JpaRepository<Pauta, Long> {
 
-    @Query(value = "SELECT * FROM pauta WHERE :#{#data_atual} BETWEEN pauta.sessao.dataInicial AND pauta.sessao.dataEncerramento")
+    @Query(value = "SELECT * FROM pauta WHERE id in (SELECT id_pauta FROM sessao WHERE (:#{#data_atual} BETWEEN pauta.sessao.dataInicial AND pauta.sessao.dataEncerramento))")
     List<Pauta> listarPautasAbertas(@Param("data_atual") LocalDate dataAtual);
 }
