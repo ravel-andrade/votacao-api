@@ -13,10 +13,15 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table( name = "pauta" )
 public class Pauta {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Long id;
+
     private String titulo;
+    public Pauta(String titulo) {
+        this.titulo = titulo;
+    }
 }

@@ -10,6 +10,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@Table( name = "sessao" )
 public class Sessao {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

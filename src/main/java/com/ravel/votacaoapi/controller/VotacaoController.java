@@ -7,6 +7,7 @@ import com.ravel.votacaoapi.model.Pauta;
 import com.ravel.votacaoapi.service.VotacaoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +20,15 @@ public class VotacaoController {
     VotacaoService service;
 
     @PostMapping(value = "/cadastrar-pauta", consumes = {MediaType.APPLICATION_JSON_VALUE})
-    public Pauta cadastrarPauta(@RequestBody PautaDto pautaDto) {
+    public ResponseEntity cadastrarPauta(@RequestBody PautaDto pautaDto) {
+        if(pautaDto.getTitulo() == null){
+            return ResponseEntity.badRequest().build();
+        }
         Pauta pauta = new Pauta(pautaDto.getTitulo());
-        return service.cadastrarPauta(pauta);
+        return ResponseEntity.ok(service.cadastrarPauta(pauta));
     }
 
-    @PutMapping(value = "/abrir-sessao", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    @PostMapping(value = "/abrir-sessao", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public void abrirSessao(@RequestBody SessaoDto sessaoDto) {
         service.abrirSessao(sessaoDto);
     }

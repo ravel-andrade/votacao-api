@@ -12,13 +12,15 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table( name = "voto" )
 public class Voto {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    boolean voto;
+    @Column(name = "voto_associado", nullable = false)
+    boolean votoAssociado;
     String cpfAssociado;
 
     Integer pautaId;

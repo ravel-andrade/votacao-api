@@ -42,8 +42,8 @@ public class VotacaoService {
     public Map<String, Long> contabilizarVotos(Long pautaId) {
         List<Voto> votosPorPauta = votoRepository.buscaVotosPorPauta(pautaId);
         Map<String, Long> votos = new HashMap<>();
-        votos.put("favoraveis", votosPorPauta.stream().filter(Voto::isVoto).count());
-        votos.put("contrarios", votosPorPauta.stream().filter(voto -> !voto.isVoto()).count());
+        votos.put("favoraveis", votosPorPauta.stream().filter(Voto::isVotoAssociado).count());
+        votos.put("contrarios", votosPorPauta.stream().filter(voto -> !voto.isVotoAssociado()).count());
         return votos;
     }
 
