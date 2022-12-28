@@ -1,11 +1,9 @@
 package com.ravel.votacaoapi.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlAttribute;
 
 @Entity
 @Getter
@@ -13,15 +11,16 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table( name = "voto" )
+@EqualsAndHashCode
 public class Voto {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Long id;
-
+    private int id;
     @Column(name = "voto_associado", nullable = false)
     boolean votoAssociado;
     String cpfAssociado;
-
-    Integer pautaId;
+    @ManyToOne
+    @JoinColumn(name = "id_pauta")
+    Pauta pautaId;
 }

@@ -32,14 +32,14 @@ public class VotacaoService {
     }
 
     public void abrirSessao(SessaoDto sessao) {
-        if(!existeSessaoAberta(sessao.getPautaId())){
-            sessaoRepository.adicionarSessaoAPauta(LocalDate.now(),
-                            LocalDate.now().plus(sessao.getDuracaoEmMinutos(), ChronoUnit.MINUTES),
-                            sessao.getPautaId());
-        }
+//        if(!existeSessaoAberta(sessao.getPautaId())){
+//            sessaoRepository.adicionarSessaoAPauta(LocalDate.now(),
+//                            LocalDate.now().plus(sessao.getDuracaoEmMinutos(), ChronoUnit.MINUTES),
+//                            sessao.getPautaId());
+//        }
     }
 
-    public Map<String, Long> contabilizarVotos(Long pautaId) {
+    public Map<String, Long> contabilizarVotos(int pautaId) {
         List<Voto> votosPorPauta = votoRepository.buscaVotosPorPauta(pautaId);
         Map<String, Long> votos = new HashMap<>();
         votos.put("favoraveis", votosPorPauta.stream().filter(Voto::isVotoAssociado).count());
@@ -58,7 +58,7 @@ public class VotacaoService {
     }
 
     public List<Pauta> listarPautasAbertas() {
-        return pautaRepository.listarPautasAbertas(LocalDate.now());
+        return pautaRepository.listarPautasAbertas();
     }
 
     private boolean existeSessaoAberta(Long pautaId) {
@@ -66,7 +66,7 @@ public class VotacaoService {
         return sessao != null;
     }
 
-    private boolean associadoVotouEmPauta(Long pautaId, String cpfAssociado) {
+    private boolean associadoVotouEmPauta(int pautaId, String cpfAssociado) {
         Voto voto = votoRepository.buscaVotoDoAssociadoPorPauta(pautaId, cpfAssociado);
         return voto != null;
     }

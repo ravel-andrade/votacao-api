@@ -8,7 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class VotoDto {
-    Long pautaId;
+    int pautaId;
     boolean voto;
     String cpfAssociado;
 }
