@@ -30,8 +30,8 @@ public class VotacaoService {
     VotoRepository votoRepository;
 
 
-    public Pauta cadastrarPauta(Pauta pauta) {
-        return pautaRepository.save(pauta);
+    public Pauta cadastrarPauta(PautaDto pautaDto) {
+        return pautaRepository.save(new Pauta(pautaDto.getDescricao()));
     }
 
     public void abrirSessao(SessaoDto sessao) {

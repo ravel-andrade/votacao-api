@@ -21,8 +21,7 @@ public class PautaController {
         if(pautaDto.getDescricao() == null){
             return ResponseEntity.badRequest().build();
         }
-        Pauta pauta = new Pauta(pautaDto.getDescricao());
-        service.cadastrarPauta(pauta);
+        service.cadastrarPauta(pautaDto);
         return ResponseEntity.ok().build();
     }
 
