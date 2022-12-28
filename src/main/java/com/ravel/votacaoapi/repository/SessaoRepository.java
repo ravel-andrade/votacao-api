@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
@@ -20,6 +21,7 @@ public interface SessaoRepository extends JpaRepository<Sessao, Long> {
     public Sessao buscaSessaoAbertaParaPauta(@Param("id_pauta") Long pauta);
 
     @Modifying
+    @Transactional
     @Query(value = "INSERT INTO sessao(inicio_sessao, fim_sessao, id_pauta) values (:inicio_sessao, :fim_sessao, :id_pauta)", nativeQuery = true)
     public void adicionarSessaoAPauta(@Param("inicio_sessao") Timestamp dataInicial, @Param("fim_sessao") Timestamp dataEncerramento, @Param("id_pauta") Long pautaId);
 

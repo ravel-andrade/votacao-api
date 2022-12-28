@@ -84,14 +84,11 @@ public class VotacaoServiceTest {
 
     @Test
     void deveContabilizarVotos(){
-        Map<String, Long> votosEsperados = new HashMap<>();
-        votosEsperados.put("contrarios", 2L);
-        votosEsperados.put("favoraveis", 3L);
         when(mockedPautaRepository.findById(1L)).thenReturn(Optional.of(new Pauta(1L, "placeholder")));
         when(mockedVotoRepository.buscaVotosPorPauta(1L)).thenReturn(VotoProvider.buildVotosEsperados());
-        Map<String, Long> votos = votacaoService.contabilizarVotos(1L);
+        String resultado = votacaoService.contabilizarVotos(1L);
         verify(mockedVotoRepository, atLeastOnce()).buscaVotosPorPauta(1L);
-        assertThat(votos).isEqualTo(votosEsperados);
+        assertThat(resultado).isEqualTo("aprovado");
     }
 
     @Test
@@ -105,6 +102,7 @@ public class VotacaoServiceTest {
     void deveCadastrarVotoComSucesso(){
         when(mockedPautaRepository.findById(1L)).thenReturn(Optional.of(new Pauta(1L, "placeholder")));
         when(mockedVotoRepository.buscaVotoDoAssociadoPorPauta(1L, "000000000000")).thenReturn(null);
+        when(mockedSessaoRepository.buscaSessaoAbertaParaPauta(1L)).thenReturn(new Sessao(1L, LocalDate.now(), LocalDate.now(), new Pauta()));
         votacaoService.cadastrarVoto(new VotoDto(1L, true, "000000000000"));
         verify(mockedVotoRepository, atLeastOnce()).cadastraVoto(1L, true, "000000000000");
     }

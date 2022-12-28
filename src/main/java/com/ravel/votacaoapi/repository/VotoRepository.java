@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -14,6 +15,7 @@ public interface VotoRepository extends JpaRepository<Voto, Long> {
     List<Voto> buscaVotosPorPauta(@Param("pauta_id") Long pautaId);
 
     @Modifying
+    @Transactional
     @Query(value = "INSERT INTO voto(voto_associado, cpf_associado, id_pauta) values (:voto, :cpf_associado, :pauta_id)",  nativeQuery = true)
     void cadastraVoto(@Param("pauta_id") Long pautaId,@Param("voto") boolean voto,@Param("cpf_associado") String cpfAssociado);
 

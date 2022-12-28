@@ -2,6 +2,7 @@ package com.ravel.votacaoapi.service;
 
 import com.ravel.votacaoapi.dto.SessaoDto;
 import com.ravel.votacaoapi.dto.VotoDto;
+import com.ravel.votacaoapi.dto.PautaDto;
 import com.ravel.votacaoapi.exception.AssociadoVotouException;
 import com.ravel.votacaoapi.exception.PautaInexistenteException;
 import com.ravel.votacaoapi.exception.SessaoAbertaException;
@@ -19,10 +20,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -42,31 +40,36 @@ public class VotacaoService {
             sessaoRepository.adicionarSessaoAPauta(Timestamp.from(Instant.now()),
                     Timestamp.from(Instant.now().plus(minutos, ChronoUnit.MINUTES)),
                     sessao.getPautaId());
+        }else {
+            throw new SessaoAbertaException(sessao.getPautaId());
         }
     }
 
-    public Map<String, Long> contabilizarVotos(Long pautaId) {
-        Map<String, Long> votos = new HashMap<>();
+    public String contabilizarVotos(Long pautaId) {
+        List<Voto> votosPorPauta = new ArrayList<>();
         if(existePauta(pautaId)){
-            List<Voto> votosPorPauta = votoRepository.buscaVotosPorPauta(pautaId);
-            votos.put("favoraveis", votosPorPauta.stream().filter(Voto::isVotoAssociado).count());
-            votos.put("contrarios", votosPorPauta.stream().filter(voto -> !voto.isVotoAssociado()).count());
+            votosPorPauta = votoRepository.buscaVotosPorPauta(pautaId);
         }
-        return votos;
+        return getResultadoVotacao(votosPorPauta);
     }
-
     public void cadastrarVoto(VotoDto votoDto) {
-        if(existePauta(votoDto.getPautaId()) && !associadoVotouEmPauta(votoDto.getPautaId(), votoDto.getCpfAssociado())){
+        if(existePauta(votoDto.getPautaId()) &&
+                !associadoVotouEmPauta(votoDto.getPautaId(), votoDto.getCpfAssociado()) &&
+                existeSessaoAberta(votoDto.getPautaId())
+        ){
             votoRepository.cadastraVoto(votoDto.getPautaId(), votoDto.isVoto(), votoDto.getCpfAssociado());
+        }else{
+            throw new SessaoAbertaException(votoDto.getPautaId());
         }
+
     }
 
-    public List<Pauta> listarPautas() {
-        return pautaRepository.findAll();
+    public List<PautaDto> listarPautas() {
+        return PautaDto.buildLista(pautaRepository.findAll());
     }
 
-    public List<Pauta> listarPautasAbertas() {
-        return pautaRepository.listarPautasAbertas();
+    public List<PautaDto> listarPautasAbertas() {
+        return PautaDto.buildLista(pautaRepository.listarPautasAbertas());
     }
 
     private boolean associadoVotouEmPauta(Long pautaId, String cpfAssociado) {
@@ -87,9 +90,28 @@ public class VotacaoService {
 
     private boolean existeSessaoAberta(Long pautaId) {
         Sessao sessao = sessaoRepository.buscaSessaoAbertaParaPauta(pautaId);
-        if(sessao != null) {
-            throw new SessaoAbertaException(pautaId);
+        return sessao != null;
+    }
+
+    private Long getVotosContrarios(List<Voto> votosPorPauta) {
+        return votosPorPauta.stream().filter(voto -> voto.isVotoAssociado() == false).count();
+    }
+
+    private Long getVotosFavoraveis(List<Voto> votosPorPauta) {
+        return votosPorPauta.stream().filter(voto -> voto.isVotoAssociado() == true).count();
+    }
+
+    private String getResultadoVotacao(List<Voto> votosPorPauta){
+        String resultado = new String();
+        if (getVotosFavoraveis(votosPorPauta) > getVotosContrarios(votosPorPauta)){
+            resultado = "aprovado";
+        };
+        if (getVotosFavoraveis(votosPorPauta) < getVotosContrarios(votosPorPauta)){
+            resultado = "reprovado";
         }
-        return false;
+        if (getVotosFavoraveis(votosPorPauta) == getVotosContrarios(votosPorPauta)){
+            resultado = "empate";
+        }
+        return resultado;
     }
 }
