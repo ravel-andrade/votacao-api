@@ -1,5 +1,6 @@
 package com.ravel.votacaoapi.service;
 
+import com.ravel.votacaoapi.dto.PautaDto;
 import com.ravel.votacaoapi.dto.SessaoDto;
 import com.ravel.votacaoapi.dto.VotoDto;
 import com.ravel.votacaoapi.exception.AssociadoVotouException;
@@ -49,7 +50,7 @@ public class VotacaoServiceTest {
     @Test
     void deveCadastrarPautaComSucesso(){
         Pauta pauta = new Pauta("placeholder");
-        votacaoService.cadastrarPauta(pauta);
+        votacaoService.cadastrarPauta(new PautaDto("placeholder"));
         verify(mockedPautaRepository, atLeast(1)).save(pauta);
     }
 
