@@ -2,6 +2,8 @@ package com.ravel.votacaoapi.service;
 
 import com.ravel.votacaoapi.dto.SessaoDto;
 import com.ravel.votacaoapi.dto.VotoDto;
+import com.ravel.votacaoapi.exception.PautaInexistenteException;
+import com.ravel.votacaoapi.exception.SessaoAbertaException;
 import com.ravel.votacaoapi.model.Pauta;
 import com.ravel.votacaoapi.model.Sessao;
 import com.ravel.votacaoapi.model.Voto;
@@ -12,11 +14,14 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -32,11 +37,12 @@ public class VotacaoService {
     }
 
     public void abrirSessao(SessaoDto sessao) {
-//        if(!existeSessaoAberta(sessao.getPautaId())){
-//            sessaoRepository.adicionarSessaoAPauta(LocalDate.now(),
-//                            LocalDate.now().plus(sessao.getDuracaoEmMinutos(), ChronoUnit.MINUTES),
-//                            sessao.getPautaId());
-//        }
+        if( existePauta(sessao.getPautaId()) && !existeSessaoAberta(sessao.getPautaId())){
+            int minutos = sessao.getDuracaoEmMinutos() == null ? 1 : sessao.getDuracaoEmMinutos();
+            sessaoRepository.adicionarSessaoAPauta(Timestamp.from(Instant.now()),
+                    Timestamp.from(Instant.now().plus(minutos, ChronoUnit.MINUTES)),
+                    sessao.getPautaId());
+        }
     }
 
     public Map<String, Long> contabilizarVotos(int pautaId) {
@@ -61,13 +67,24 @@ public class VotacaoService {
         return pautaRepository.listarPautasAbertas();
     }
 
-    private boolean existeSessaoAberta(Long pautaId) {
-        Sessao sessao = sessaoRepository.buscaSessaoAbertaParaPauta(pautaId);
-        return sessao != null;
-    }
-
     private boolean associadoVotouEmPauta(int pautaId, String cpfAssociado) {
         Voto voto = votoRepository.buscaVotoDoAssociadoPorPauta(pautaId, cpfAssociado);
         return voto != null;
+    }
+
+    private boolean existePauta(Long pautaId) {
+        Optional<Pauta> pauta = pautaRepository.findById(pautaId);
+        if(pauta.isEmpty()){
+            throw new PautaInexistenteException(pautaId);
+        }
+        return true;
+    }
+
+    private boolean existeSessaoAberta(Long pautaId) {
+        Sessao sessao = sessaoRepository.buscaSessaoAbertaParaPauta(pautaId);
+        if(sessao != null) {
+            throw new SessaoAbertaException(pautaId);
+        }
+        return false;
     }
 }

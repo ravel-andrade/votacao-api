@@ -1,8 +1,6 @@
 package com.ravel.votacaoapi.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,6 +11,8 @@ import java.util.Date;
 @Setter
 @Table( name = "sessao" )
 @EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 public class Sessao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

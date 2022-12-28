@@ -17,10 +17,10 @@ import java.util.List;
 public interface SessaoRepository extends JpaRepository<Sessao, Long> {
 
     @Query(value = "SELECT * FROM sessao WHERE (SELECT CURRENT_TIMESTAMP() BETWEEN sessao.inicio_sessao AND sessao.fim_sessao) and (sessao.id_pauta = :id_pauta)", nativeQuery = true)
-    Sessao buscaSessaoAbertaParaPauta(@Param("id_pauta") Long pauta);
+    public Sessao buscaSessaoAbertaParaPauta(@Param("id_pauta") Long pauta);
 
     @Modifying
     @Query(value = "INSERT INTO sessao(inicio_sessao, fim_sessao, id_pauta) values (:inicio_sessao, :fim_sessao, :id_pauta)", nativeQuery = true)
-    void adicionarSessaoAPauta(@Param("inicio_sessao") Timestamp dataInicial, @Param("fim_sessao") Timestamp dataEncerramento, @Param("id_pauta") Long pautaId);
+    public void adicionarSessaoAPauta(@Param("inicio_sessao") Timestamp dataInicial, @Param("fim_sessao") Timestamp dataEncerramento, @Param("id_pauta") Long pautaId);
 
 }

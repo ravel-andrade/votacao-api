@@ -14,7 +14,5 @@ import java.util.Date;
 @NoArgsConstructor
 public class SessaoDto {
     private Long pautaId;
-    private Long duracaoEmMinutos;
-    private Date aberturaDaSessao;
-    private boolean voto;
+    private Integer duracaoEmMinutos;
 }
