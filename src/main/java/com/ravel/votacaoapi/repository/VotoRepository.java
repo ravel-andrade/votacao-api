@@ -11,12 +11,12 @@ import java.util.List;
 @Repository
 public interface VotoRepository extends JpaRepository<Voto, Long> {
     @Query(value = "SELECT * FROM voto WHERE voto.id_pauta = :pauta_id", nativeQuery = true)
-    List<Voto> buscaVotosPorPauta(@Param("pauta_id") int pautaId);
+    List<Voto> buscaVotosPorPauta(@Param("pauta_id") Long pautaId);
 
     @Modifying
     @Query(value = "INSERT INTO voto(voto_associado, cpf_associado, id_pauta) values (:voto, :cpf_associado, :pauta_id)",  nativeQuery = true)
-    void cadastraVoto(@Param("pauta_id") int pautaId,@Param("voto") boolean voto,@Param("cpf_associado") String cpfAssociado);
+    void cadastraVoto(@Param("pauta_id") Long pautaId,@Param("voto") boolean voto,@Param("cpf_associado") String cpfAssociado);
 
     @Query(value = "SELECT * FROM voto WHERE voto.cpf_associado = :cpf_associado and voto.id_pauta = :pauta_id", nativeQuery = true)
-    Voto buscaVotoDoAssociadoPorPauta(@Param("pauta_id") int pautaId,@Param("cpf_associado") String cpfAssociado);
+    Voto buscaVotoDoAssociadoPorPauta(@Param("pauta_id") Long pautaId,@Param("cpf_associado") String cpfAssociado);
 }

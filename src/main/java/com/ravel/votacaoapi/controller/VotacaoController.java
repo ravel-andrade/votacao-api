@@ -39,7 +39,7 @@ public class VotacaoController {
     }
 
     @GetMapping(value = "/contabilizar")
-    public Map<String, Long> contabilizarVotos(@RequestParam int pautaId) {
+    public Map<String, Long> contabilizarVotos(@RequestParam Long pautaId) {
         return service.contabilizarVotos(pautaId);
     }
 

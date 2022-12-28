@@ -35,7 +35,7 @@ public class VotoRepositoryTest {
     })
     void deveBuscaVotosPorPautaComSucesso(){
         pautaRepository.save(new Pauta("placeholder"));
-        List<Voto> resultado = votoRepository.buscaVotosPorPauta(1);
+        List<Voto> resultado = votoRepository.buscaVotosPorPauta(1L);
         assertThat(resultado).hasSize(5);
         assertThat(resultado).isEqualTo(VotoProvider.buildVotosEsperados());
     }
@@ -44,8 +44,8 @@ public class VotoRepositoryTest {
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = SqlProvider.LIMPA_BANCO)
     void deveCadastraVotoComSucesso(){
         pautaRepository.save(new Pauta("placeholder"));
-        votoRepository.cadastraVoto(1, true, "00000000000");
-        Voto votoEsperado = votoRepository.buscaVotoDoAssociadoPorPauta(1, "00000000000");
+        votoRepository.cadastraVoto(1L, true, "00000000000");
+        Voto votoEsperado = votoRepository.buscaVotoDoAssociadoPorPauta(1L, "00000000000");
         assertThat(votoEsperado).isEqualTo(VotoProvider.VOTO);
     }
 
@@ -54,7 +54,7 @@ public class VotoRepositoryTest {
             @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = SqlProvider.INSERIR_VOTOS)
     })
     void deveBuscarVotoDoAssociadoPorPautaComSucesso(){
-        Voto resultado = votoRepository.buscaVotoDoAssociadoPorPauta(1, "00000000000");
+        Voto resultado = votoRepository.buscaVotoDoAssociadoPorPauta(1L, "00000000000");
         assertThat(resultado).isEqualTo(VotoProvider.VOTO);
     }
 }

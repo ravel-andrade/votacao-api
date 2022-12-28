@@ -16,4 +16,16 @@ public class PautaProvider {
 
         return pauta;
     }
+
+    public static List<Pauta> buildPautas() {
+        List<Pauta> pauta = new ArrayList<>();
+        pauta.add(new Pauta(1L, "placeholder1"));
+        pauta.add(new Pauta(2L, "placeholder2"));
+        pauta.add(new Pauta(3L, "placeholder3"));
+        pauta.add(new Pauta(4L, "placeholder1"));
+        pauta.add(new Pauta(5L, "placeholder2"));
+        pauta.add(new Pauta(6L, "placeholder3"));
+
+        return pauta;
+    }
 }

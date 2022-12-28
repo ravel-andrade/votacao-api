@@ -2,6 +2,7 @@ package com.ravel.votacaoapi.service;
 
 import com.ravel.votacaoapi.dto.SessaoDto;
 import com.ravel.votacaoapi.dto.VotoDto;
+import com.ravel.votacaoapi.exception.AssociadoVotouException;
 import com.ravel.votacaoapi.exception.PautaInexistenteException;
 import com.ravel.votacaoapi.exception.SessaoAbertaException;
 import com.ravel.votacaoapi.model.Pauta;
@@ -25,7 +26,6 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class VotacaoService {
     PautaRepository pautaRepository;
     SessaoRepository sessaoRepository;
@@ -45,16 +45,18 @@ public class VotacaoService {
         }
     }
 
-    public Map<String, Long> contabilizarVotos(int pautaId) {
-        List<Voto> votosPorPauta = votoRepository.buscaVotosPorPauta(pautaId);
+    public Map<String, Long> contabilizarVotos(Long pautaId) {
         Map<String, Long> votos = new HashMap<>();
-        votos.put("favoraveis", votosPorPauta.stream().filter(Voto::isVotoAssociado).count());
-        votos.put("contrarios", votosPorPauta.stream().filter(voto -> !voto.isVotoAssociado()).count());
+        if(existePauta(pautaId)){
+            List<Voto> votosPorPauta = votoRepository.buscaVotosPorPauta(pautaId);
+            votos.put("favoraveis", votosPorPauta.stream().filter(Voto::isVotoAssociado).count());
+            votos.put("contrarios", votosPorPauta.stream().filter(voto -> !voto.isVotoAssociado()).count());
+        }
         return votos;
     }
 
     public void cadastrarVoto(VotoDto votoDto) {
-        if(!associadoVotouEmPauta(votoDto.getPautaId(), votoDto.getCpfAssociado())){
+        if(existePauta(votoDto.getPautaId()) && !associadoVotouEmPauta(votoDto.getPautaId(), votoDto.getCpfAssociado())){
             votoRepository.cadastraVoto(votoDto.getPautaId(), votoDto.isVoto(), votoDto.getCpfAssociado());
         }
     }
@@ -67,9 +69,12 @@ public class VotacaoService {
         return pautaRepository.listarPautasAbertas();
     }
 
-    private boolean associadoVotouEmPauta(int pautaId, String cpfAssociado) {
+    private boolean associadoVotouEmPauta(Long pautaId, String cpfAssociado) {
         Voto voto = votoRepository.buscaVotoDoAssociadoPorPauta(pautaId, cpfAssociado);
-        return voto != null;
+        if(voto != null){
+            throw new AssociadoVotouException(cpfAssociado);
+        }
+        return false;
     }
 
     private boolean existePauta(Long pautaId) {
