@@ -1,9 +1,6 @@
 package com.ravel.votacaoapi.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,14 +11,15 @@ import java.util.List;
 @Getter
 @Setter
 @Table( name = "pauta" )
+@EqualsAndHashCode
 public class Pauta {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private String titulo;
-    public Pauta(String titulo) {
-        this.titulo = titulo;
+    private String descricao;
+    public Pauta(String descricao) {
+        this.descricao = descricao;
     }
 }

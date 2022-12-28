@@ -2,6 +2,10 @@ package com.ravel.votacaoapi.service;
 
 import com.ravel.votacaoapi.dto.SessaoDto;
 import com.ravel.votacaoapi.dto.VotoDto;
+import com.ravel.votacaoapi.dto.PautaDto;
+import com.ravel.votacaoapi.exception.AssociadoVotouException;
+import com.ravel.votacaoapi.exception.PautaInexistenteException;
+import com.ravel.votacaoapi.exception.SessaoAbertaException;
 import com.ravel.votacaoapi.model.Pauta;
 import com.ravel.votacaoapi.model.Sessao;
 import com.ravel.votacaoapi.model.Voto;
@@ -12,15 +16,14 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class VotacaoService {
     PautaRepository pautaRepository;
     SessaoRepository sessaoRepository;
@@ -32,33 +35,57 @@ public class VotacaoService {
     }
 
     public void abrirSessao(SessaoDto sessao) {
-        if(!existeSessaoAberta(sessao.getPautaId())){
-            sessaoRepository.adicionarSessaoAPauta(LocalDate.now(),
-                            LocalDate.now().plus(sessao.getDuracaoEmMinutos(), ChronoUnit.MINUTES),
-                            sessao.getPautaId());
+        if( existePauta(sessao.getPautaId()) && !existeSessaoAberta(sessao.getPautaId())){
+            int minutos = sessao.getDuracaoEmMinutos() == null ? 1 : sessao.getDuracaoEmMinutos();
+            sessaoRepository.adicionarSessaoAPauta(Timestamp.from(Instant.now()),
+                    Timestamp.from(Instant.now().plus(minutos, ChronoUnit.MINUTES)),
+                    sessao.getPautaId());
+        }else {
+            throw new SessaoAbertaException(sessao.getPautaId());
         }
     }
 
-    public Map<String, Long> contabilizarVotos(Long pautaId) {
-        List<Voto> votosPorPauta = votoRepository.buscaVotosPorPauta(pautaId);
-        Map<String, Long> votos = new HashMap<>();
-        votos.put("favoraveis", votosPorPauta.stream().filter(Voto::isVotoAssociado).count());
-        votos.put("contrarios", votosPorPauta.stream().filter(voto -> !voto.isVotoAssociado()).count());
-        return votos;
+    public String contabilizarVotos(Long pautaId) {
+        List<Voto> votosPorPauta = new ArrayList<>();
+        if(existePauta(pautaId)){
+            votosPorPauta = votoRepository.buscaVotosPorPauta(pautaId);
+        }
+        return getResultadoVotacao(votosPorPauta);
     }
-
     public void cadastrarVoto(VotoDto votoDto) {
-        if(!associadoVotouEmPauta(votoDto.getPautaId(), votoDto.getCpfAssociado())){
+        if(existePauta(votoDto.getPautaId()) &&
+                !associadoVotouEmPauta(votoDto.getPautaId(), votoDto.getCpfAssociado()) &&
+                existeSessaoAberta(votoDto.getPautaId())
+        ){
             votoRepository.cadastraVoto(votoDto.getPautaId(), votoDto.isVoto(), votoDto.getCpfAssociado());
+        }else{
+            throw new SessaoAbertaException(votoDto.getPautaId());
         }
+
     }
 
-    public List<Pauta> listarPautas() {
-        return pautaRepository.findAll();
+    public List<PautaDto> listarPautas() {
+        return PautaDto.buildLista(pautaRepository.findAll());
     }
 
-    public List<Pauta> listarPautasAbertas() {
-        return pautaRepository.listarPautasAbertas(LocalDate.now());
+    public List<PautaDto> listarPautasAbertas() {
+        return PautaDto.buildLista(pautaRepository.listarPautasAbertas());
+    }
+
+    private boolean associadoVotouEmPauta(Long pautaId, String cpfAssociado) {
+        Voto voto = votoRepository.buscaVotoDoAssociadoPorPauta(pautaId, cpfAssociado);
+        if(voto != null){
+            throw new AssociadoVotouException(cpfAssociado);
+        }
+        return false;
+    }
+
+    private boolean existePauta(Long pautaId) {
+        Optional<Pauta> pauta = pautaRepository.findById(pautaId);
+        if(pauta.isEmpty()){
+            throw new PautaInexistenteException(pautaId);
+        }
+        return true;
     }
 
     private boolean existeSessaoAberta(Long pautaId) {
@@ -66,8 +93,25 @@ public class VotacaoService {
         return sessao != null;
     }
 
-    private boolean associadoVotouEmPauta(Long pautaId, String cpfAssociado) {
-        Voto voto = votoRepository.buscaVotoDoAssociadoPorPauta(pautaId, cpfAssociado);
-        return voto != null;
+    private Long getVotosContrarios(List<Voto> votosPorPauta) {
+        return votosPorPauta.stream().filter(voto -> voto.isVotoAssociado() == false).count();
+    }
+
+    private Long getVotosFavoraveis(List<Voto> votosPorPauta) {
+        return votosPorPauta.stream().filter(voto -> voto.isVotoAssociado() == true).count();
+    }
+
+    private String getResultadoVotacao(List<Voto> votosPorPauta){
+        String resultado = new String();
+        if (getVotosFavoraveis(votosPorPauta) > getVotosContrarios(votosPorPauta)){
+            resultado = "aprovado";
+        };
+        if (getVotosFavoraveis(votosPorPauta) < getVotosContrarios(votosPorPauta)){
+            resultado = "reprovado";
+        }
+        if (getVotosFavoraveis(votosPorPauta) == getVotosContrarios(votosPorPauta)){
+            resultado = "empate";
+        }
+        return resultado;
     }
 }

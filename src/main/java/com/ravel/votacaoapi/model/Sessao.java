@@ -1,7 +1,6 @@
 package com.ravel.votacaoapi.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,13 +10,17 @@ import java.util.Date;
 @Getter
 @Setter
 @Table( name = "sessao" )
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 public class Sessao {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    private LocalDate fimDaSessao;
-    private LocalDate aberturaDaSessao;
-
-    Integer pautaId;
+    private LocalDate fimSessao;
+    private LocalDate inicioSessao;
+    @ManyToOne
+    @JoinColumn(name = "id_pauta")
+    Pauta pautaId;
 }
