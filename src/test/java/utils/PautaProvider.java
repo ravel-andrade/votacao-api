@@ -1,5 +1,6 @@
 package utils;
 
+import com.ravel.votacaoapi.dto.PautaDto;
 import com.ravel.votacaoapi.model.Pauta;
 import com.ravel.votacaoapi.model.Voto;
 
@@ -26,6 +27,14 @@ public class PautaProvider {
         pauta.add(new Pauta(5L, "placeholder2"));
         pauta.add(new Pauta(6L, "placeholder3"));
 
+        return pauta;
+    }
+
+    public static List<PautaDto> getPautas() {
+        List<PautaDto> pauta = new ArrayList<>();
+        pauta.add(new PautaDto(1L, "placeholder1"));
+        pauta.add(new PautaDto(2L, "placeholder2"));
+        pauta.add(new PautaDto(3L, "placeholder3"));
         return pauta;
     }
 }

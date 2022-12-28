@@ -1,5 +1,7 @@
 package utils;
 
+import com.ravel.votacaoapi.dto.PautaDto;
+import com.ravel.votacaoapi.dto.VotoDto;
 import com.ravel.votacaoapi.model.Pauta;
 import com.ravel.votacaoapi.model.Voto;
 
