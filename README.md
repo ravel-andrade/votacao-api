@@ -7,7 +7,7 @@ _*Dependências*_
 
 _*Para rodar a aplicação*_
 1. rodar "./gradlew clean build"
-2. rodar java "-jar build/libs/votacao-api-0.0.1-SNAPSHOT.jar"
+2. rodar java "java -jar build/libs/votacao-api-0.0.1-SNAPSHOT.jar"
 
 _Técnologias utilizadas_
 - Java 17
