@@ -22,8 +22,9 @@ _Técnologias utilizadas_
 
 Pauta:
 
-Para cadastrar uma nova pauta é possivel utilizar o seguinte recurso.
-REQUEST POST: v1/pauta
+Para cadastrar uma nova pauta é possivel utilizar o seguinte recurso.</br>
+REQUEST POST: v1/pauta</br>
+
 REQUEST BODY:{
     "descricao":"{descricao}"
 }
@@ -36,23 +37,27 @@ REQUEST GET: v1/pauta?abertas=true
 
 Sessão:
 
-Para cadastrar uma nova sessao é possivel utilizar o seguinte recurso.
-REQUEST POST: v1/sessao
-REQUEST BODY:{
-"pautaId":{id da pauta que sessao será aberta},
-"duracaoEmMinutos": {duração em minutos para tempo da sessão (Caso não informado, será 1 min)}
+Para cadastrar uma nova sessao é possivel utilizar o seguinte recurso.</br>
+REQUEST POST: v1/sessao</br>
+
+REQUEST BODY:{</br>
+"pautaId":{id da pauta que sessao será aberta},</br>
+"duracaoEmMinutos": {duração em minutos para tempo da sessão (Caso não informado, será 1 min)} </br>
 }
 
 Voto:
 
-Para cadastrar uma novo voto, é possivel utilizar o recurso.
+Para cadastrar uma novo voto, é possivel utilizar o recurso.</br>
 REQUEST POST: v1/voto
-REQUEST BODY:{
-"pautaId":{id da pauta que sessao será aberta},
-"voto": {voto do associado -> true ou false},
-"cpfAssociado":{cpf do associado votante}
+
+REQUEST BODY:{</br>
+"pautaId":{id da pauta que sessao será aberta},</br>
+"voto": {voto do associado -> true ou false},</br>
+"cpfAssociado":{cpf do associado votante}</br>
 }
 
+
 Para obter os votos de uma pauta, é possivel utilizar o recurso.
+
 REQUEST GET: v1/voto?pauta-id={pauta id}
 
