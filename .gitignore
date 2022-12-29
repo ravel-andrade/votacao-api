@@ -54,6 +54,4 @@ build/bootJarMainClassName
 *.tar.gz
 *.7z
 *.rar
-!/gradle/wrapper/gradle-wrapper.jar
-!libs/**/*.jar
 /bin/*
