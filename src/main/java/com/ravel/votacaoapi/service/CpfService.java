@@ -6,7 +6,11 @@ import org.springframework.web.server.ResponseStatusException;
 import com.ravel.votacaoapi.connector.CpfConnectorInterface;
 import com.ravel.votacaoapi.connector.CpfConnector;
 import com.ravel.votacaoapi.connector.StatusCpf;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
+@AllArgsConstructor
 public class CpfService {
     CpfConnectorInterface cpfConnector = new CpfConnector();
 

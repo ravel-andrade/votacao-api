@@ -9,6 +9,7 @@ import com.ravel.votacaoapi.exception.PautaInexistenteException;
 import com.ravel.votacaoapi.exception.SessaoAbertaException;
 import com.ravel.votacaoapi.exception.SessaoInexistenteException;
 import com.ravel.votacaoapi.model.Pauta;
+import com.ravel.votacaoapi.service.CpfService;
 import com.ravel.votacaoapi.service.VotacaoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
@@ -46,7 +47,7 @@ public class VotoController {
 
     @GetMapping("/{cpf}")
     public ResponseEntity<StatusCpf> verificarCpf(@PathParam("cpf") String cpf) {
-        StatusCpf status = cpfService.verificarCpf(cpf);
+        StatusCpf status = cpfService.verificaCpf(cpf);
         return ResponseEntity.ok(status);
     }
 }
