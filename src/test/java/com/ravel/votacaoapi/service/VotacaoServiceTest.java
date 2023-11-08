@@ -12,11 +12,17 @@ import com.ravel.votacaoapi.model.Voto;
 import com.ravel.votacaoapi.repository.PautaRepository;
 import com.ravel.votacaoapi.repository.SessaoRepository;
 import com.ravel.votacaoapi.repository.VotoRepository;
+
+import org.assertj.core.api.Assert;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.server.ResponseStatusException;
+
 import utils.PautaProvider;
 import utils.VotoProvider;
 
@@ -81,6 +87,19 @@ public class VotacaoServiceTest {
         verify(mockedPautaRepository, atLeastOnce()).findById(1L);
         verify(mockedSessaoRepository, never()).buscaSessaoAbertaParaPauta(1L);
         verify(mockedSessaoRepository, never()).adicionarSessaoAPauta(any(Timestamp.class), any(Timestamp.class), eq(1L));
+    }
+
+    @Test
+    void NaoDeveCriarSessaoQuandoPautaIdNaoForEnviada() throws Exception{
+        SessaoDto Sessao = new SessaoDto(null, 1);
+        Exception exception = assertThrows(ResponseStatusException.class, () -> {
+            votacaoService.abrirSessao(Sessao);
+        });
+        
+        String expectedMessage = "Id da pauta não foi informado";
+        String actualMessage = exception.getMessage();
+
+        Assertions.assertThat(actualMessage.contains(expectedMessage));
     }
 
     @Test

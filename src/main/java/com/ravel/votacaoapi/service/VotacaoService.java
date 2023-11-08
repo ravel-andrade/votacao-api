@@ -14,7 +14,10 @@ import com.ravel.votacaoapi.repository.SessaoRepository;
 import com.ravel.votacaoapi.repository.VotoRepository;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -31,10 +34,16 @@ public class VotacaoService {
 
 
     public Pauta cadastrarPauta(PautaDto pautaDto) {
+        if(pautaDto.getDescricao() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Dados inválidos para pauta");
+        }
         return pautaRepository.save(new Pauta(pautaDto.getDescricao()));
     }
 
     public void abrirSessao(SessaoDto sessao) {
+        if(sessao.getPautaId() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id da pauta não foi informado");
+        }
         if( existePauta(sessao.getPautaId()) && !existeSessaoAberta(sessao.getPautaId())){
             int minutos = sessao.getDuracaoEmMinutos() == null ? 1 : sessao.getDuracaoEmMinutos();
             sessaoRepository.adicionarSessaoAPauta(Timestamp.from(Instant.now()),

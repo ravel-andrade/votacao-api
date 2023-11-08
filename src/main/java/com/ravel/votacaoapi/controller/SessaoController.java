@@ -21,9 +21,6 @@ public class SessaoController {
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity abrirSessao(@RequestBody SessaoDto sessaoDto) {
-        if(sessaoDto.getPautaId() == null){
-            return ResponseEntity.badRequest().build();
-        }
         try {
             service.abrirSessao(sessaoDto);
         }catch (PautaInexistenteException | SessaoAbertaException e){

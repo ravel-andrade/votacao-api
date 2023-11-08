@@ -3,12 +3,16 @@ package com.ravel.votacaoapi.dto;
 import com.ravel.votacaoapi.model.Pauta;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
 @Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class PautaDto {
     private Long id;
     private String descricao;

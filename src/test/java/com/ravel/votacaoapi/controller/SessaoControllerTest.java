@@ -42,13 +42,6 @@ public class SessaoControllerTest {
     }
 
     @Test
-    void NaoDeveCriarSessaoQuandoPautaIdNaoForEnviada() throws Exception{
-        mvc.perform(post(URL).contentType(MediaType.APPLICATION_JSON)
-                        .content(leConteudoDoArquivo("__files/requestCadastrarSessaoSemPautaId.json")))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void NaoDeveCriarSessaoQuandoPautaIdNaoExistir() throws Exception{
         SessaoDto sessao = new SessaoDto(1L, 5);
         doThrow(new PautaInexistenteException(1L)).when(mockedVotacaoService).abrirSessao(sessao);

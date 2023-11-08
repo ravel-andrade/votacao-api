@@ -1,5 +1,6 @@
 package com.ravel.votacaoapi.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ravel.votacaoapi.dto.PautaDto;
 import com.ravel.votacaoapi.exception.PautaInexistenteException;
 import com.ravel.votacaoapi.model.Pauta;
@@ -36,7 +37,6 @@ public class PautaControllerTest {
         Pauta pauta =  new Pauta(1L,"placeholder");
 
         when(mockedVotacaoService.cadastrarPauta(new PautaDto("placeholder"))).thenReturn(pauta);
-
         mvc.perform(post(URL).contentType(MediaType.APPLICATION_JSON)
                         .content(leConteudoDoArquivo("__files/requestCadastrarPauta.json")))
                 .andExpect(status().isOk());
