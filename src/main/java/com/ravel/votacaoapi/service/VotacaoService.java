@@ -13,7 +13,6 @@ import com.ravel.votacaoapi.repository.PautaRepository;
 import com.ravel.votacaoapi.repository.SessaoRepository;
 import com.ravel.votacaoapi.repository.VotoRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -31,7 +29,6 @@ public class VotacaoService {
     PautaRepository pautaRepository;
     SessaoRepository sessaoRepository;
     VotoRepository votoRepository;
-
 
     public Pauta cadastrarPauta(PautaDto pautaDto) {
         if(pautaDto.getDescricao() == null){

@@ -1,5 +1,6 @@
 package com.ravel.votacaoapi.controller;
 
+import com.ravel.votacaoapi.connector.StatusCpf;
 import com.ravel.votacaoapi.dto.PautaDto;
 import com.ravel.votacaoapi.dto.SessaoDto;
 import com.ravel.votacaoapi.dto.VotoDto;
@@ -22,6 +23,7 @@ import java.util.List;
 public class VotoController {
 
     VotacaoService service;
+    CpfService cpfService;
 
     @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity votar(@RequestBody VotoDto votoDto) {
@@ -40,5 +42,11 @@ public class VotoController {
         }catch (PautaInexistenteException e){
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/{cpf}")
+    public ResponseEntity<StatusCpf> verificarCpf(@PathParam("cpf") String cpf) {
+        StatusCpf status = cpfService.verificarCpf(cpf);
+        return ResponseEntity.ok(status);
     }
 }
