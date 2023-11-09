@@ -9,6 +9,9 @@ _*Para rodar a aplicação*_
 1. rodar "./gradlew clean build"
 2. rodar java "java -jar build/libs/votacao-api-0.0.1-SNAPSHOT.jar"
 
+_*Para utilizar a aplicação na web*_
+1. Utilize a seguinte URL: https://sds1-ravel.herokuapp.com/
+
 _Técnologias utilizadas_
 - Java 17
 - Gradle
@@ -60,4 +63,9 @@ REQUEST BODY:{</br>
 Para obter os votos de uma pauta, é possivel utilizar o recurso.
 
 REQUEST GET: v1/voto?pauta-id={pauta id}
+
+
+Cpf:
+Para verificar um cpf
+REQUEST GET: v1/voto/verifica/?cpf=00000000000
 
