@@ -61,13 +61,17 @@ public class VotacaoService {
         return getResultadoVotacao(votosPorPauta);
     }
     public void cadastrarVoto(VotoDto votoDto) {
+        if(votoDto.getPautaId() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A pauta deve ser informada");
+        }
         if(existePauta(votoDto.getPautaId()) &&
                 !associadoVotouEmPauta(votoDto.getPautaId(), votoDto.getCpfAssociado()) &&
                 existeSessaoAberta(votoDto.getPautaId())
         ){
             votoRepository.cadastraVoto(votoDto.getPautaId(), votoDto.isVoto(), votoDto.getCpfAssociado());
         }else{
-            throw new SessaoAbertaException(votoDto.getPautaId());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+             "Não existe sessão aberta para esta pauta");
         }
 
     }

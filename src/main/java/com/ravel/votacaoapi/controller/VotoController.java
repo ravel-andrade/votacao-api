@@ -1,14 +1,10 @@
 package com.ravel.votacaoapi.controller;
 
 import com.ravel.votacaoapi.connector.StatusCpf;
-import com.ravel.votacaoapi.dto.PautaDto;
-import com.ravel.votacaoapi.dto.SessaoDto;
 import com.ravel.votacaoapi.dto.VotoDto;
 import com.ravel.votacaoapi.exception.AssociadoVotouException;
 import com.ravel.votacaoapi.exception.PautaInexistenteException;
-import com.ravel.votacaoapi.exception.SessaoAbertaException;
 import com.ravel.votacaoapi.exception.SessaoInexistenteException;
-import com.ravel.votacaoapi.model.Pauta;
 import com.ravel.votacaoapi.service.VotacaoService;
 import com.ravel.votacaoapi.service.CpfService;
 import lombok.AllArgsConstructor;

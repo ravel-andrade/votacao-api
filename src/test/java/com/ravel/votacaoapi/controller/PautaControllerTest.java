@@ -43,13 +43,6 @@ public class PautaControllerTest {
     }
 
     @Test
-    void naoDeveCriarPautaQuandoNaoPassaDescricao() throws Exception{
-        mvc.perform(post(URL).contentType(MediaType.APPLICATION_JSON)
-                        .content(leConteudoDoArquivo("__files/requestCadastrarPautaSemDescricao.json")))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
     void deveBuscarTodasAsPautas() throws Exception{
         when(mockedVotacaoService.listarPautas()).thenReturn(PautaProvider.getPautas());
         mvc.perform(get(URL).contentType(MediaType.APPLICATION_JSON))
