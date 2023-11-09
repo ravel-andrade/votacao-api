@@ -13,6 +13,7 @@ import com.ravel.votacaoapi.repository.PautaRepository;
 import com.ravel.votacaoapi.repository.SessaoRepository;
 import com.ravel.votacaoapi.repository.VotoRepository;
 import lombok.AllArgsConstructor;
+import com.ravel.votacaoapi.connector.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class VotacaoService {
     PautaRepository pautaRepository;
     SessaoRepository sessaoRepository;
     VotoRepository votoRepository;
+    CpfConnectorInterface cpfConnector;
 
     public Pauta cadastrarPauta(PautaDto pautaDto) {
         if(pautaDto.getDescricao() == null){
@@ -72,6 +74,17 @@ public class VotacaoService {
 
     public List<PautaDto> listarPautas() {
         return PautaDto.buildLista(pautaRepository.findAll());
+    }
+
+    public StatusCpf verificaCpf(String cpf) {
+        verificaValidadadeCpf(cpf);
+        return cpfConnector.verificaCpfCooperado(cpf);
+    }
+
+    private void verificaValidadadeCpf(String cpf){
+        if (!cpf.matches("[0-9]+") || cpf.length() != 11) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cpf informado está com formato incorreto");
+        }
     }
 
     public List<PautaDto> listarPautasAbertas() {

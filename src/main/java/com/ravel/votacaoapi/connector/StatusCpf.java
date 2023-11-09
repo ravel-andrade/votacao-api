@@ -1,7 +1,15 @@
 package com.ravel.votacaoapi.connector;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.*;
 
-@AllArgsConstructor
+@Getter
 public class StatusCpf{
-    String stauts;
+    String status;
+
+    @JsonCreator
+    public StatusCpf(@JsonProperty("status") String status){
+        this.status = status;
+    }
 }

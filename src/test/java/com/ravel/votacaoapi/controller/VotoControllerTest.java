@@ -1,29 +1,33 @@
 package com.ravel.votacaoapi.controller;
 
+import com.ravel.votacaoapi.connector.StatusCpf;
 import com.ravel.votacaoapi.dto.SessaoDto;
 import com.ravel.votacaoapi.dto.VotoDto;
 import com.ravel.votacaoapi.exception.AssociadoVotouException;
 import com.ravel.votacaoapi.exception.PautaInexistenteException;
 import com.ravel.votacaoapi.exception.SessaoInexistenteException;
-import com.ravel.votacaoapi.model.Pauta;
+import com.ravel.votacaoapi.service.CpfService;
 import com.ravel.votacaoapi.service.VotacaoService;
 import lombok.SneakyThrows;
+import lombok.var;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import utils.PautaProvider;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.net.http.HttpResponse;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(VotoController.class)
@@ -33,8 +37,25 @@ public class VotoControllerTest {
     private MockMvc mvc;
     @MockBean
     VotacaoService mockedVotacaoService;
+    @MockBean
+    CpfService mockedCpfService;
 
     static final String URL = "/v1/voto";
+
+    @Test
+    void deveRetornarBadRequestQuandoFormatoCpfInvalido() throws Exception{
+        ResponseStatusException exception = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cpf informado está com formato incorreto");
+        doThrow(exception).when(mockedCpfService).verificaCpf("123");
+        mvc.perform(get(URL+"/verifica/?cpf=123").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void deveRetornarOkQuandoVerificarCpf() throws Exception{
+        doReturn(new StatusCpf("UNABLE_TO_VOTE")).when(mockedCpfService).verificaCpf("04953194063");
+        mvc.perform(get(URL+"/verifica/?cpf=123").contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isOk());
+    }
 
     @Test
     void NaoDeveCadastrarVotoQuandoSessaoNaoExiste() throws Exception{

@@ -1,18 +1,15 @@
 package com.ravel.votacaoapi.service;
+import lombok.AllArgsConstructor;
+import com.ravel.votacaoapi.connector.*;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.ravel.votacaoapi.connector.CpfConnectorInterface;
-import com.ravel.votacaoapi.connector.CpfConnector;
-import com.ravel.votacaoapi.connector.StatusCpf;
-import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @AllArgsConstructor
 public class CpfService {
-    CpfConnectorInterface cpfConnector = new CpfConnector();
+    CpfConnectorInterface cpfConnector;
 
     public StatusCpf verificaCpf(String cpf) {
         verificaValidadadeCpf(cpf);
