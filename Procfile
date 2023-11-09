@@ -1,1 +1,1 @@
-web: java -cp target/classes:target/dependency/* src/main/java/com/ravel/votacaoapi/VotacaoApiApplication.java
+web: java -jar build/libs/votacao-api-0.0.1-SNAPSHOT.jar
