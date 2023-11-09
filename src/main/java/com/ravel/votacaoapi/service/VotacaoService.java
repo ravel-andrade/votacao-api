@@ -13,7 +13,7 @@ import com.ravel.votacaoapi.repository.PautaRepository;
 import com.ravel.votacaoapi.repository.SessaoRepository;
 import com.ravel.votacaoapi.repository.VotoRepository;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import com.ravel.votacaoapi.connector.*;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -31,7 +30,7 @@ public class VotacaoService {
     PautaRepository pautaRepository;
     SessaoRepository sessaoRepository;
     VotoRepository votoRepository;
-
+    CpfConnectorInterface cpfConnector;
 
     public Pauta cadastrarPauta(PautaDto pautaDto) {
         if(pautaDto.getDescricao() == null){
@@ -62,19 +61,34 @@ public class VotacaoService {
         return getResultadoVotacao(votosPorPauta);
     }
     public void cadastrarVoto(VotoDto votoDto) {
+        if(votoDto.getPautaId() == null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A pauta deve ser informada");
+        }
         if(existePauta(votoDto.getPautaId()) &&
                 !associadoVotouEmPauta(votoDto.getPautaId(), votoDto.getCpfAssociado()) &&
                 existeSessaoAberta(votoDto.getPautaId())
         ){
             votoRepository.cadastraVoto(votoDto.getPautaId(), votoDto.isVoto(), votoDto.getCpfAssociado());
         }else{
-            throw new SessaoAbertaException(votoDto.getPautaId());
+            throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
+             "Não existe sessão aberta para esta pauta");
         }
 
     }
 
     public List<PautaDto> listarPautas() {
         return PautaDto.buildLista(pautaRepository.findAll());
+    }
+
+    public StatusCpf verificaCpf(String cpf) {
+        verificaValidadadeCpf(cpf);
+        return cpfConnector.verificaCpfCooperado(cpf);
+    }
+
+    private void verificaValidadadeCpf(String cpf){
+        if (!cpf.matches("[0-9]+") || cpf.length() != 11) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cpf informado está com formato incorreto");
+        }
     }
 
     public List<PautaDto> listarPautasAbertas() {
@@ -91,7 +105,7 @@ public class VotacaoService {
 
     private boolean existePauta(Long pautaId) {
         Optional<Pauta> pauta = pautaRepository.findById(pautaId);
-        if(pauta.isEmpty()){
+        if(pauta.isPresent()){
             throw new PautaInexistenteException(pautaId);
         }
         return true;
