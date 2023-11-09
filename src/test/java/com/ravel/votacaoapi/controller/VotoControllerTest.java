@@ -9,8 +9,6 @@ import com.ravel.votacaoapi.exception.SessaoInexistenteException;
 import com.ravel.votacaoapi.service.CpfService;
 import com.ravel.votacaoapi.service.VotacaoService;
 import lombok.SneakyThrows;
-import lombok.var;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.net.http.HttpResponse;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
