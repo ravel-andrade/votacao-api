@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.ravel'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = 11
+sourceCompatibility = 1.8
 targetCompatibility = 11
 
 configurations {
@@ -36,5 +36,3 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
-
-task stage(dependsOn: ['clean', 'installDist'])
