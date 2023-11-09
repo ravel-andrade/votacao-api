@@ -1,1 +1,1 @@
-web: java -cp target/classes/:target/dependency/* com.ravel.votacaoapi.VotacaoApiApplication.java
+web: java -cp target/classes:target/dependency/* src\main\java\com\ravel\votacaoapi\VotacaoApiApplication.java
