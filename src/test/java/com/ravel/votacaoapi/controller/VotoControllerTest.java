@@ -1,7 +1,6 @@
 package com.ravel.votacaoapi.controller;
 
 import com.ravel.votacaoapi.connector.StatusCpf;
-import com.ravel.votacaoapi.dto.SessaoDto;
 import com.ravel.votacaoapi.dto.VotoDto;
 import com.ravel.votacaoapi.exception.AssociadoVotouException;
 import com.ravel.votacaoapi.exception.PautaInexistenteException;
