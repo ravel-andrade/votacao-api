@@ -105,7 +105,7 @@ public class VotacaoService {
 
     private boolean existePauta(Long pautaId) {
         Optional<Pauta> pauta = pautaRepository.findById(pautaId);
-        if(pauta.isEmpty()){
+        if(pauta.isPresent()){
             throw new PautaInexistenteException(pautaId);
         }
         return true;
